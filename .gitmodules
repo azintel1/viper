@@ -1,0 +1,3 @@
+[submodule "SKCore"]
+	path = SKCore
+	url = https://github.com/MeetMe/SKCore.git
