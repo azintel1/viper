@@ -29,6 +29,7 @@
 		18062E4D1A0B0414009CC757 /* SKLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 18062E3B1A0B0414009CC757 /* SKLogger.m */; };
 		18062E4E1A0B0414009CC757 /* UIDevice+SKCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 18062E3D1A0B0414009CC757 /* UIDevice+SKCore.m */; };
 		18274FA71A12A73700537BE9 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18274FA61A12A73700537BE9 /* MenuViewController.m */; };
+		183BBA421A427DB900299F4D /* EditVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 183BBA411A427DB900299F4D /* EditVC.m */; };
 		187193021A1A7A530053FD2F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 187193011A1A7A530053FD2F /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
@@ -89,6 +90,8 @@
 		18062E4F1A0B060B009CC757 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		18274FA51A12A73700537BE9 /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
 		18274FA61A12A73700537BE9 /* MenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuViewController.m; sourceTree = "<group>"; };
+		183BBA401A427DB900299F4D /* EditVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditVC.h; sourceTree = "<group>"; };
+		183BBA411A427DB900299F4D /* EditVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditVC.m; sourceTree = "<group>"; };
 		187193011A1A7A530053FD2F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -147,6 +150,8 @@
 				0197243819F9D95E0036FCE6 /* Supporting Files */,
 				18274FA51A12A73700537BE9 /* MenuViewController.h */,
 				18274FA61A12A73700537BE9 /* MenuViewController.m */,
+				183BBA401A427DB900299F4D /* EditVC.h */,
+				183BBA411A427DB900299F4D /* EditVC.m */,
 			);
 			path = test2;
 			sourceTree = "<group>";
@@ -346,6 +351,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18062E3F1A0B0414009CC757 /* SKAnimatedVC.m in Sources */,
+				183BBA421A427DB900299F4D /* EditVC.m in Sources */,
 				18274FA71A12A73700537BE9 /* MenuViewController.m in Sources */,
 				0197246019F9DB790036FCE6 /* circleview.m in Sources */,
 				18062E421A0B0414009CC757 /* UIColor+SKCore.m in Sources */,

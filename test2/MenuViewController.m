@@ -9,68 +9,138 @@
 #import "MenuViewController.h"
 #import "ViewController.h"
 #import "circleview.h"
+#import "EditVC.h"
 
 
 @implementation MenuViewController
 {
-    UILabel *label;
-    UITextView *optionsText;
+    UITableView *tableView_;
+    NSMutableArray *dataArray_;
+    NSIndexPath *selectedIndexPath_;
 }
 
 @synthesize onOptionUpdate = onOptionUpdate_;
 
-
--(void) ONClose
+- (instancetype)init
 {
-    if (self.onOptionUpdate != nil)
+    self = [super init];
+    if (self != nil)
     {
-        self.onOptionUpdate([optionsText.text componentsSeparatedByString:@","]);
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSArray *savedData = [defaults objectForKey:@"SavedData"];
+        if (savedData == nil)
+        {
+            NSString *dataString = @"drink,smoke,chug,waterfall,NHIE,Me,You,Heaven,Questions,KingCup";
+            NSArray *dataArray = [dataString componentsSeparatedByString:@","];
+
+            savedData = @[@{@"name" : @"Default", @"data" : dataArray}];
+            [defaults setObject:savedData forKey:@"SavedData"];
+            [defaults synchronize];
+        }
+        dataArray_ = [NSMutableArray arrayWithArray:savedData];
     }
+    return self;
+}
+
+
+- (void)onClose
+{
+
     [self dismissViewControllerAnimated: YES completion:nil];
+}
+
+- (void)onAdd
+{
+    
 }
 
 - (void)loadView
 {
     self.view=[[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
-    self.view.backgroundColor = [UIColor blueColor];
-    UIButton* button = [[UIButton alloc] initWithFrame:CGRectMake(10.0, 10.0, 200.0, 75.0)];
-    [button setBackgroundColor:[UIColor clearColor]];
-    [button setTitle:@"close" forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(ONClose) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:button];
-    optionsText = [[UITextView alloc]initWithFrame:CGRectMake(20, 75, 350, 200)];
-    optionsText.backgroundColor = [UIColor whiteColor];
-    optionsText.textColor = [UIColor blackColor];
-    optionsText.returnKeyType = UIReturnKeyDone;
-    [self.view addSubview:optionsText];
+    self.view.backgroundColor = [UIColor colorWithHex:0xffeeeeee];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onClose)];
+    self.navigationItem.title = @"Create";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(onAdd)];
+
+    tableView_ = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    tableView_.translatesAutoresizingMaskIntoConstraints = NO;
+    tableView_.delegate = self;
+    tableView_.dataSource = self;
+    [self.view addSubview:tableView_];
+    
+    [self beginConstraints];
+    [self addLayoutConstraints:[tableView_ fillParent]];
+    [self.view addConstraints:[self endConstraints]];
+    
 }
 
--(void) textField
+#pragma mark - UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    selectedIndexPath_ = indexPath;
+    [tableView_ deselectRowAtIndexPath:indexPath animated:YES];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]
+                                  initWithTitle:@"Options"
+                                  delegate:self
+                                  cancelButtonTitle:@"Cancel"
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:@"Load", @"Edit", nil];
+    [actionSheet showInView:self.view];
 
+//    
 }
 
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return dataArray_.count;
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView_ dequeueReusableCellWithIdentifier:@"cell"];
+    if (cell == nil)
+    {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
 
-
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    }
+    NSDictionary *data = [dataArray_ objectAtIndex:indexPath.row];
+    cell.textLabel.text = data[@"name"];
+    return cell;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
+#pragma mark - UIActionSheetDelegate
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex)
+    {
+        case 0:
+        {
+            NSDictionary *data = [dataArray_ objectAtIndex:selectedIndexPath_.row];
+            if (self.onOptionUpdate != nil)
+            {
+                self.onOptionUpdate(data[@"data"]);
+            }
+            [self dismissViewControllerAnimated: YES completion:nil];
+            //load
+            
+            break;
+        }
+        case 1:
+        {
+            EditVC *editVC = [[EditVC alloc]init];
+            NSDictionary *data = [dataArray_ objectAtIndex:selectedIndexPath_.row];
+            [self.navigationController pushViewController:editVC animated:YES];
+            
+        
+            //Edit
+            
+            
+            break;
+        }
+        default:
+            break;
+    }
 }
-*/
 
 @end

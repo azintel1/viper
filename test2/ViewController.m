@@ -44,7 +44,8 @@
             strongSelf->circleView_.dataArray = dataArray;
         }
     };
-    [self presentViewController: menuViewController animated: YES completion: nil];
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:menuViewController];
+    [self presentViewController:navController animated: YES completion: nil];
 }
 
 - (void)loadView
@@ -63,9 +64,7 @@
     CGFloat screenCenterY = screenRect.size.height/2;
     CGFloat circleCenterY = screenCenterY-(300.0/2);
     circleView_.frame =CGRectMake(circleCenterX, circleCenterY, 300.0, 300.0);
-    NSString *dataString = @"drink,smoke,chug,waterfall,NHIE,Me,You,Heaven,Questions,KingCup";
-    NSArray *dataArray = [dataString componentsSeparatedByString:@","];
-    circleView_.dataArray = dataArray;
+
 // buttonload
     UIButton* button = [[UIButton alloc] initWithFrame:CGRectMake(10.0, 10.0, 200.0, 75.0)];
     [button setBackgroundColor:[UIColor clearColor]];
