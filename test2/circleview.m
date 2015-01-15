@@ -67,8 +67,6 @@
         CGContextSetFillColorWithColor(context, [UIColor randomColor].CGColor);
         CGContextFillPath(context);
     }
-   
-    
 }
 
 - (CGPoint)GetPointWithAngle:(CGFloat)angle;

@@ -10,6 +10,9 @@
 #import "circleview.h"
 #import "MenuViewController.h"
 
+#define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
+#define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
+
 @interface ViewController ()
 
 @end
@@ -24,8 +27,17 @@
     CGFloat endAngle_;
     CGFloat decay_;
     CGFloat rate_;
-    CGPoint lastTouch_;
     BOOL isClockwise_;
+
+    CGFloat releaseAngleDiff_;
+    CGFloat deltaAngle_;
+
+    CGAffineTransform startTransform_;
+    CGFloat angleDifference_;
+
+    BOOL panCanceled_;
+    CGPoint lastTouchPoint_;
+    CGFloat previousAngle_;
 
 }
 - (void) dealloc
@@ -57,7 +69,7 @@
     circleView_.autoresizingMask = UIViewAutoresizingNone;
     pan_ = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(onPan:)];
     [circleView_ addGestureRecognizer:pan_];
-    
+
     CGRect screenRect = [UIScreen mainScreen].bounds;
     CGFloat screenCenterX = screenRect.size.width/2;
     CGFloat circleCenterX = screenCenterX-(300.0/2);
@@ -77,7 +89,7 @@
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
-    
+
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -86,70 +98,102 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
+
+- (CGFloat)calculateDistanceFromCenter:(CGPoint)point
+{
+    CGPoint center = circleView_.center;
+    CGFloat dx = point.x - center.x;
+    CGFloat dy = point.y - center.y;
+    return sqrt(dx*dx + dy*dy);
+}
+
 #pragma mark - gesture methods
 
 - (void)onPan:(UIPanGestureRecognizer *)pan
 {
-    
+    // 1 - Get touch position
     CGPoint touchPoint = [pan locationInView:self.view];
-    CGPoint circleCp = self.view.center;
-    CGFloat angleOffset = 180*(M_PI/180);
-    angle_ = atan2f(circleCp.y-touchPoint.y, circleCp.x-touchPoint.x);
-    angle_ = angle_+ angleOffset;
-    
-       angle_ = fabsf(angle_);
 
-    
     if (pan.state == UIGestureRecognizerStateBegan)
     {
+        panCanceled_ = NO;
         [NSRunLoop cancelPreviousPerformRequestsWithTarget:self selector:@selector(onLoop) object:nil];
-        startAngle_ = angle_;
-        NSLog(@"startangle: %f", startAngle_);
-        return;
 
-    } else if (pan.state == UIGestureRecognizerStateEnded)
+        // 1.1 - Get the distance from the center
+        CGFloat dist = [self calculateDistanceFromCenter:touchPoint];
+
+        // 1.2 - Filter out touches too close to the center
+        if (dist < 40 || dist > circleView_.width/2.0)
+        {
+            panCanceled_ = YES;
+            // forcing a tap to be on the ferrule
+            NSLog(@"ignoring tap (%f,%f)", touchPoint.x, touchPoint.y);
+            return;
+        }
+
+        // 2 - Calculate distance from center
+        CGFloat dx = touchPoint.x - circleView_.center.x;
+        CGFloat dy = touchPoint.y - circleView_.center.y;
+        // 3 - Calculate arctangent value
+        deltaAngle_ = atan2(dy,dx);
+        // 4 - Save current transform
+        startTransform_ = circleView_.transform;
+        return;
+    }
+    else if (pan.state == UIGestureRecognizerStateEnded)
     {
-        rate_ = 0.1;
-        decay_ = 0.0006;
+        if (panCanceled_)
+        {
+            return;
+        }
+
+        decay_ = 0.0005;
+
         [self performSelector:@selector(onLoop) withObject:nil afterDelay:0.01];
-        lastTouch_ = CGPointZero;
-        return;
     }
-    // -- calculate directction of movement
-    if (!CGPointEqualToPoint(lastTouch_, CGPointZero))
+    else if (pan.state == UIGestureRecognizerStateChanged)
     {
-        CGPoint circleCp = self.view.center;
-        CGFloat angleOffset = 180*(M_PI/180);
-        lastAngle_ = atan2f(circleCp.y-lastTouch_.y, circleCp.x-lastTouch_.x);
-        lastAngle_ = lastAngle_+ angleOffset;
-        NSLog(@"angle: %f lastAngle: %f", angle_, lastAngle_);
-        isClockwise_ = angle_>lastAngle_;
-        lastAngle_ = fabsf(lastAngle_);
-        
-        
+        if (panCanceled_)
+        {
+            return;
+        }
+
+        previousAngle_ = angleDifference_;
+
+        CGFloat dx = touchPoint.x - circleView_.center.x;
+        CGFloat dy = touchPoint.y - circleView_.center.y;
+        CGFloat ang = atan2(dy, dx);
+        angleDifference_ = DEGREES_TO_RADIANS(RADIANS_TO_DEGREES(deltaAngle_ - ang));
+
+        circleView_.transform = CGAffineTransformRotate(startTransform_, -angleDifference_);
+
+        isClockwise_ = previousAngle_ < angleDifference_;
+
+        CGFloat newAngleDiff = fabsf(angleDifference_);
+        CGFloat prevAngleDiff = fabsf(previousAngle_);
+
+        CGFloat diff = fabsf(newAngleDiff - prevAngleDiff);
+        NSLog(@"diff: %f", diff);
+
+        rate_ = diff > 0.2 ? 0.2 : diff;
     }
 
-    endAngle_ = angle_+startAngle_;
-    
-    NSLog(@"end: %f", endAngle_);
-    NSLog(@"clockwise: %d", isClockwise_);
-    NSLog(@"==============================================================");
-    circleView_.transform = CGAffineTransformRotate(CGAffineTransformIdentity, endAngle_);
-    lastTouch_ = touchPoint;
+    lastTouchPoint_ = touchPoint;
 }
+
 - (void)onLoop
 {
-//    NSLog(@"loop");
-    CGFloat newangle = 0.0;
     if (isClockwise_)
     {
-        newangle = endAngle_+=rate_;
+        angleDifference_ += rate_;
     }
     else
     {
-        newangle = endAngle_-=rate_;
+        angleDifference_ -= rate_;
     }
-    circleView_.transform = CGAffineTransformRotate(CGAffineTransformIdentity, newangle);
+
+    circleView_.transform = CGAffineTransformRotate(startTransform_, -angleDifference_);
+
     rate_ -= decay_;
     if (rate_ <= 0)
     {
