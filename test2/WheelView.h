@@ -1,5 +1,5 @@
 //
-//  circleview.h
+//  WheelView.h
 //  test2
 //
 //  Created by Zach Brown on 10/23/14.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface circleview : UIView
+@interface WheelView : UIView
 
 @property (nonatomic, strong)NSArray *dataArray;
 

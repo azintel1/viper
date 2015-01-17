@@ -14,7 +14,7 @@
 		0197244619F9D95E0036FCE6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0197244519F9D95E0036FCE6 /* Images.xcassets */; };
 		0197244919F9D95E0036FCE6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0197244719F9D95E0036FCE6 /* LaunchScreen.xib */; };
 		0197245519F9D95E0036FCE6 /* test2Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0197245419F9D95E0036FCE6 /* test2Tests.m */; };
-		0197246019F9DB790036FCE6 /* circleview.m in Sources */ = {isa = PBXBuildFile; fileRef = 0197245F19F9DB790036FCE6 /* circleview.m */; };
+		0197246019F9DB790036FCE6 /* WheelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0197245F19F9DB790036FCE6 /* WheelView.m */; };
 		18062E3F1A0B0414009CC757 /* SKAnimatedVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 18062E1D1A0B0414009CC757 /* SKAnimatedVC.m */; };
 		18062E401A0B0414009CC757 /* UIViewController+Children.m in Sources */ = {isa = PBXBuildFile; fileRef = 18062E1F1A0B0414009CC757 /* UIViewController+Children.m */; };
 		18062E411A0B0414009CC757 /* SKView.m in Sources */ = {isa = PBXBuildFile; fileRef = 18062E231A0B0414009CC757 /* SKView.m */; };
@@ -57,8 +57,8 @@
 		0197244E19F9D95E0036FCE6 /* test2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = test2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0197245319F9D95E0036FCE6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0197245419F9D95E0036FCE6 /* test2Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = test2Tests.m; sourceTree = "<group>"; };
-		0197245E19F9DB790036FCE6 /* circleview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = circleview.h; sourceTree = "<group>"; };
-		0197245F19F9DB790036FCE6 /* circleview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = circleview.m; sourceTree = "<group>"; };
+		0197245E19F9DB790036FCE6 /* WheelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WheelView.h; sourceTree = "<group>"; };
+		0197245F19F9DB790036FCE6 /* WheelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WheelView.m; sourceTree = "<group>"; };
 		18062E1C1A0B0414009CC757 /* SKAnimatedVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKAnimatedVC.h; sourceTree = "<group>"; };
 		18062E1D1A0B0414009CC757 /* SKAnimatedVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKAnimatedVC.m; sourceTree = "<group>"; };
 		18062E1E1A0B0414009CC757 /* UIViewController+Children.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Children.h"; sourceTree = "<group>"; };
@@ -139,8 +139,8 @@
 			isa = PBXGroup;
 			children = (
 				0197243C19F9D95E0036FCE6 /* AppDelegate.h */,
-				0197245E19F9DB790036FCE6 /* circleview.h */,
-				0197245F19F9DB790036FCE6 /* circleview.m */,
+				0197245E19F9DB790036FCE6 /* WheelView.h */,
+				0197245F19F9DB790036FCE6 /* WheelView.m */,
 				0197243D19F9D95E0036FCE6 /* AppDelegate.m */,
 				0197243F19F9D95E0036FCE6 /* ViewController.h */,
 				0197244019F9D95E0036FCE6 /* ViewController.m */,
@@ -353,7 +353,7 @@
 				18062E3F1A0B0414009CC757 /* SKAnimatedVC.m in Sources */,
 				183BBA421A427DB900299F4D /* EditVC.m in Sources */,
 				18274FA71A12A73700537BE9 /* MenuViewController.m in Sources */,
-				0197246019F9DB790036FCE6 /* circleview.m in Sources */,
+				0197246019F9DB790036FCE6 /* WheelView.m in Sources */,
 				18062E421A0B0414009CC757 /* UIColor+SKCore.m in Sources */,
 				18062E411A0B0414009CC757 /* SKView.m in Sources */,
 				18062E451A0B0414009CC757 /* NSObject+SKAutoLayout.m in Sources */,

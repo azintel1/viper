@@ -8,7 +8,7 @@
 
 #import "MenuViewController.h"
 #import "ViewController.h"
-#import "circleview.h"
+#import "WheelView.h"
 #import "EditVC.h"
 
 
