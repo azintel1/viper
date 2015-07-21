@@ -28,15 +28,7 @@
     {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSArray *savedData = [defaults objectForKey:@"SavedData"];
-        if (savedData == nil)
-        {
-            NSString *dataString = @"drink,smoke,chug,waterfall,NHIE,Me,You,Heaven,Questions,KingCup";
-            NSArray *dataArray = [dataString componentsSeparatedByString:@","];
 
-            savedData = @[@{@"name" : @"Default", @"data" : dataArray}];
-            [defaults setObject:savedData forKey:@"SavedData"];
-            [defaults synchronize];
-        }
         dataArray_ = [NSMutableArray arrayWithArray:savedData];
     }
     return self;
@@ -51,12 +43,12 @@
 
 - (void)onAdd
 {
-    
+
 }
 
 - (void)loadView
 {
-    self.view=[[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.view = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.view.backgroundColor = [UIColor colorWithHex:0xffeeeeee];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(onClose)];
     self.navigationItem.title = @"Create";
@@ -67,11 +59,11 @@
     tableView_.delegate = self;
     tableView_.dataSource = self;
     [self.view addSubview:tableView_];
-    
+
     [self beginConstraints];
     [self addLayoutConstraints:[tableView_ fillParent]];
     [self.view addConstraints:[self endConstraints]];
-    
+
 }
 
 #pragma mark - UITableViewDelegate
@@ -86,9 +78,8 @@
                                   cancelButtonTitle:@"Cancel"
                                   destructiveButtonTitle:nil
                                   otherButtonTitles:@"Load", @"Edit", nil];
-    [actionSheet showInView:self.view];
 
-//    
+    [actionSheet showInView:self.view];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -123,19 +114,15 @@
             }
             [self dismissViewControllerAnimated: YES completion:nil];
             //load
-            
+
             break;
         }
         case 1:
         {
-            EditVC *editVC = [[EditVC alloc]init];
-            NSDictionary *data = [dataArray_ objectAtIndex:selectedIndexPath_.row];
+            EditVC *editVC = [[EditVC alloc] init];
+            editVC.loadedData = [dataArray_ objectAtIndex:selectedIndexPath_.row];
             [self.navigationController pushViewController:editVC animated:YES];
-            
-        
-            //Edit
-            
-            
+
             break;
         }
         default:

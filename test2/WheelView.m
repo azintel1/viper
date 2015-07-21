@@ -64,6 +64,10 @@
 
 - (void)setDataArray:(NSArray *)dataArray
 {
+    [NSRunLoop cancelPreviousPerformRequestsWithTarget:self selector:@selector(onLoop) object:nil];
+    self.transform = CGAffineTransformIdentity;
+    pan_.enabled = YES;
+
     dataArray_ = dataArray;
     numPieces_= dataArray.count;
     [self setNeedsDisplay];
@@ -89,7 +93,9 @@
         drawPoint = [self GetPointWithAngle:currentDrawAngle_];
         CGContextAddArc(context, self.width/2.0, self.width/2.0, currentRadius, lastAngle, currentDrawAngle_, 0);
         CGContextAddLineToPoint(context, self.width/2.0, self.width/2.0);
-        CGContextSetFillColorWithColor(context, [UIColor randomColor].CGColor);
+        CGContextSetFillColorWithColor(context, (((i % 2) == 0) ?
+                                                 [UIColor colorWithHex:0xff9AA7FF].CGColor :
+                                                 [UIColor colorWithHex:0xfffff29a].CGColor));
         CGContextFillPath(context);
     }
 }
@@ -105,19 +111,24 @@
     return CGPointMake(xpos, ypos);
 }
 
--(void)rebuildLabels
-{   [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+- (void)rebuildLabels
+{
+    [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     for (NSInteger i = 0; i < numPieces_; i++)
     {
         NSString *labelText = dataArray_[i];
         UILabel *optionLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.width/2.0, self.height/2.0, 140, 30)];
-        [optionLabel setTextColor:[UIColor blackColor]];
-        [optionLabel setBackgroundColor:[UIColor clearColor]];
-        [optionLabel setText: labelText];
+        optionLabel.textColor = [UIColor blackColor];
+        optionLabel.font = [UIFont fontWithName:@"AppleSDGothicNeo-Bold" size:24.0];
+        optionLabel.backgroundColor = [UIColor clearColor];
+        optionLabel.text = labelText;
+        optionLabel.textAlignment = NSTextAlignmentLeft;
+        optionLabel.width = (self.width / 2.0) - 10.0;
+
         CGFloat angleSize = 2*M_PI/numPieces_;
         optionLabel.layer.anchorPoint = CGPointMake(1.0f, 0.5f);
         optionLabel.layer.position = CGPointMake(self.width/2.0, self.height/2.0);
-        optionLabel.transform= CGAffineTransformIdentity;
+        optionLabel.transform = CGAffineTransformIdentity;
         optionLabel.transform = CGAffineTransformMakeRotation((angleSize * i)+(angleSize/2));
         optionLabel.tag = i;
         [self addSubview:optionLabel];
@@ -195,10 +206,10 @@
 
         isClockwise_ = previousAngle_ < angleDifference_;
 
-        CGFloat newAngleDiff = fabsf(angleDifference_);
-        CGFloat prevAngleDiff = fabsf(previousAngle_);
+        CGFloat newAngleDiff = fabs(angleDifference_);
+        CGFloat prevAngleDiff = fabs(previousAngle_);
 
-        CGFloat diff = fabsf(newAngleDiff - prevAngleDiff);
+        CGFloat diff = fabs(newAngleDiff - prevAngleDiff);
 
         rate_ = diff > 0.2 ? 0.2 : diff;
     }

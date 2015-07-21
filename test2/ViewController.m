@@ -20,6 +20,7 @@
 {
     WheelView *circleView_;
     SKView *dropShadow_;
+    SKView *arrow_;
 }
 
 - (void)onMenu
@@ -52,7 +53,7 @@
     CGFloat circleCenterX = screenRect.size.width-(circleDiameter/2);
     CGFloat screenCenterY = screenRect.size.height/2;
     CGFloat circleCenterY = screenCenterY-(circleDiameter/2);
-    circleView_.frame =CGRectMake(circleCenterX, circleCenterY, circleDiameter, circleDiameter);
+    circleView_.frame = CGRectMake(circleCenterX, circleCenterY, circleDiameter, circleDiameter);
 
     dropShadow_ = [[SKView alloc] init];
     dropShadow_.autoresizingMask = UIViewAutoresizingNone;
@@ -88,19 +89,53 @@
     button.height = button.height + 10.0;
     button.top = 30.0;
     button.left = 10.0;
+
+    arrow_ = [[SKView alloc] initWithFrame:CGRectMake(0.0, 0.0, 100.0, 50.0)];
+    arrow_.alpha = 0.3;
+    arrow_.drawBlock = ^(CGRect rect, UIView *view) {
+
+        Triangle triangle = {CGPointMake(0.0, 0.0),
+            CGPointMake(view.width, view.height/2.0),
+            CGPointMake(0.0, view.height)};
+
+        [UIView drawTriangle:triangle andFillColor:[UIColor blackColor]];
+
+    };
+    [self.view addSubview:arrow_];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray *savedData = [defaults objectForKey:@"SavedData"];
+
+    NSString *dataString = @"drink,smoke,chug,waterfall,NHIE,Me,You,Heaven,Questions,KingCup";
+    NSArray *dataArray = [dataString componentsSeparatedByString:@","];
+
+    if (savedData == nil)
+    {
+        savedData = @[@{@"name" : @"Default", @"data" : dataArray}];
+        [defaults setObject:savedData forKey:@"SavedData"];
+        [defaults synchronize];
+    }
+
+    NSArray *lastDataSet = [defaults objectForKey:@"LastDataSet"];
+    if (lastDataSet == nil)
+    {
+        lastDataSet = dataArray;
+        [defaults setObject:dataArray forKey:@"LastDataSet"];
+        [defaults synchronize];
+    }
+
+    circleView_.dataArray = lastDataSet;
 }
 
 - (void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
-
-}
-- (void)viewDidLoad {
-    [super viewDidLoad];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
+    arrow_.centerY = self.view.centerY;
 }
 
 @end
